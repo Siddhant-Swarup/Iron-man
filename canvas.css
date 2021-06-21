@@ -1,0 +1,27 @@
+html,body{
+    margin: 0;
+    padding: 0;
+    background-color: rgb(7, 7, 7);
+    color: white;
+    font-family: sans-serif;
+}
+
+#scoreboard{
+    border: 2px solid rgb(10, 76, 219);
+    width: 19%;
+    position: fixed;
+    top: 20%;
+    left: 79%;
+    font-size: 46px;
+    padding: 5px;
+}
+#Score{
+    
+    width: 20%;
+    position: fixed;
+    top: 40%;
+    left: 79%;
+    text-align: center;
+    font-size: 40px;
+    font-family: sans-serif;
+}
