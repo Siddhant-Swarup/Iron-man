@@ -84,7 +84,7 @@ function draw() {
       let temp = SpikeGroup.get(i);
 
       if (temp.isTouching(iron_man)) {
-        // electro_effect.play();
+        electro_effect.play();
         temp.destroy();
         temp = null;
         score -= 2;
@@ -106,8 +106,8 @@ function draw() {
     SpikeGroup.setLifetimeEach(-1);
     DiamondGroup.setLifetimeEach(-1);
     StoneGroup.setLifetimeEach(-1);
-
-
+    iron_man.velocityY=0;
+    iron_man.velocityX=0;
 
   }
 
