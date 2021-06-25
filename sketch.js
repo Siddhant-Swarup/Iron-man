@@ -1,8 +1,9 @@
 
-let bg, backgroundImg;
-let StoneGroup, DiamondGroup, SpikeGroup;
-let score = 0;
-let gamemode = "play";
+var bg, backgroundImg;
+var StoneGroup, DiamondGroup, SpikeGroup;
+var score = 0;
+var gamemode = "play";
+var restart, restart_image;
 //preload function
 function preload() {
   backgroundImg = loadImage("images/bg.jpg");
@@ -11,6 +12,7 @@ function preload() {
   dimaondImage = loadImage("images/diamond.png");
   spikeImage = loadImage("images/spikes.png");
   iron_man_collide = loadImage("images/boom.png");
+  restart_image = loadImage("images/restart.png");
 
   soundFormats('mp3');
   explosion = loadSound("sounds/Explosion");
@@ -29,22 +31,34 @@ function setup() {
   iron_man.addImage("flying", player);
   iron_man.addImage("collide", iron_man_collide);
   iron_man.scale = 0.25;
+  iron_man.debug=true;
+  iron_man.setCollider("rectangle",100,0,450,450);
 
+  //sprite for restart option
+  restart = createSprite(500, 300);
+  restart.addImage(restart_image);
+  restart.scale = 0.3;
+  restart.visible = false;
 
+  //for the edges
   edge1 = createSprite(0, 5, 2000, 10);//top
   edge2 = createSprite(0, 565, 2000, 10);//bottom
-  edge2.visible = false;
   edge3 = createSprite(5, 0, 10, 2000);//left
   edge4 = createSprite(995, 0, 10, 2000);//right
 
-
+  //for obstacles and rewards
   StoneGroup = new Group();
   DiamondGroup = new Group();
   SpikeGroup = new Group();
+  //object of gamemode class
+  mode=new Status();
+  //Object of class Status
+  decision = new Status();
 }
 
 function draw() {
-  if (gamemode === "play") {
+  console.log(decision.getvalue());
+  if (decision.getvalue() === "play") {
     bg.addImage(backgroundImg);
     bg.scale = 2;
     if (bg.y < 100) {
@@ -91,14 +105,15 @@ function draw() {
       }
     }
     if (edge2.isTouching(iron_man)) {
+      decision.setvalue("end");
       iron_man.changeImage("collide", iron_man_collide);
-      gamemode = "end";
       explosion.play();
+      restart.visible = true;
 
     }
   }
 
-  if (gamemode === "end") {
+  else if (decision.getvalue() === "end") {
     bg.y = 0;
     DiamondGroup.setVelocityYEach(0);
     StoneGroup.setVelocityYEach(0);
@@ -106,10 +121,17 @@ function draw() {
     SpikeGroup.setLifetimeEach(-1);
     DiamondGroup.setLifetimeEach(-1);
     StoneGroup.setLifetimeEach(-1);
-    iron_man.velocityY=0;
-    iron_man.velocityX=0;
-
+    iron_man.velocityY = 0;
+    iron_man.velocityX = 0;
+    iron_man.setCollider("rectangle", 0, 0, 300, 10);
+    if (mousePressedOver(restart)) {
+      restart_game();
+    }
   }
+
+  // if(keyDown("esc")){
+  //   decision.setvalue="paused";
+  // }
 
 
   generatestone();
@@ -177,7 +199,17 @@ function generateSpikes() {
     SpikeGroup.add(spike);
   }
 }
-/*
-function menu(){
 
-}*/
+//Restart function 
+function restart_game() {
+  decision.setvalue("play");
+  iron_man.changeAnimation("flying", player);
+  StoneGroup.destroyEach();
+  SpikeGroup.destroyEach();
+  DiamondGroup.destroyEach();
+  score = 0;
+  iron_man.x=300;
+  iron_man.y=300;
+  restart.visible = false;
+  iron_man.setCollider("rectangle", 100, 0, 450, 450);
+}

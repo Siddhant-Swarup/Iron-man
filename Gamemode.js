@@ -1,6 +1,6 @@
 class Status{
     constructor(){
-        this.value="";
+        this.value="play";
     }
     setvalue(val){
         this.value=val;
